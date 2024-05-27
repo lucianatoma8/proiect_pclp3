@@ -61,3 +61,27 @@ ax[2].set_ylabel('Procent')
 plt.tight_layout()
 plt.savefig("grafic.png")
 print(f"Graficul este salvat in grafic.png\n")
+
+# CERINTA 3
+
+# Generarea histogramelor pentru coloanele numerice
+coloane_numerice = data.select_dtypes(include=[np.number]).columns
+data[coloane_numerice].hist(bins=20, figsize=(14, 10), layout=(3, 3))
+plt.suptitle('Histogramele pentru coloanele numerice')
+plt.tight_layout()
+plt.savefig("histograma.png")
+print(f"Histograma este salvata in histograma.png\n")
+
+# CERINTA 4
+
+# CERINTA 5
+
+# CERINTA 6
+
+# CERINTA 7
+
+# CERINTA 8
+
+# CERINTA 9
+
+# CERINTA 10
