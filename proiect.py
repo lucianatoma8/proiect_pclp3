@@ -37,12 +37,12 @@ print(f"Procentul femeilor: {gender_rate['female']:.2f}%\n")
 fig, axs = plt.subplots(1, 3, figsize=(18, 5))
 
 sns.barplot(x=survival_rate.index, y=survival_rate.values, ax=axs[0])
-axs[0].set_title('Procentul de supraviețuire')
+axs[0].set_title('Procentul de supravietuire')
 axs[0].set_ylabel('Procent')
 axs[0].set_xticklabels(['Nu', 'Da'])
 
 sns.barplot(x=class_rate.index, y=class_rate.values, ax=axs[1])
-axs[1].set_title('Procentul pasagerilor pe clasă')
+axs[1].set_title('Procentul pasagerilor pe clasa')
 axs[1].set_ylabel('Procent')
 
 sns.barplot(x=gender_rate.index, y=gender_rate.values, ax=axs[2])
