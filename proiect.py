@@ -29,7 +29,7 @@ class_rate = data['Pclass'].value_counts(normalize=True) * 100
 print(f"Procentul pasagerilor pentru fiecare tip de clasa:\n{class_rate}\n")
 
 # Procentul barbatilor si femeilor
-gender_rate = df['Sex'].value_counts(normalize=True) * 100
+gender_rate = data['Sex'].value_counts(normalize=True) * 100
 print(f"Procentul barbatilor: {gender_rate['male']:.2f}%\n")
 print(f"Procentul femeilor: {gender_rate['female']:.2f}%\n")
 
@@ -39,6 +39,7 @@ fig, axs = plt.subplots(1, 3, figsize=(18, 5))
 sns.barplot(x=survival_rate.index, y=survival_rate.values, ax=axs[0])
 axs[0].set_title('Procentul de supravietuire')
 axs[0].set_ylabel('Procent')
+axs[0].set_xticks([0, 1])
 axs[0].set_xticklabels(['Nu', 'Da'])
 
 sns.barplot(x=class_rate.index, y=class_rate.values, ax=axs[1])
@@ -47,11 +48,10 @@ axs[1].set_ylabel('Procent')
 
 sns.barplot(x=gender_rate.index, y=gender_rate.values, ax=axs[2])
 axs[2].set_title('Procentul pe sexe')
-axs[2].set_ylabel('Procent')
 
 plt.tight_layout()
-plt.show()
-
+plt.savefig("grafic.png")
+print(f"Graficul este salvat in grafic.png\n")
 # CERINTA 3
 
 # CERINTA 4
