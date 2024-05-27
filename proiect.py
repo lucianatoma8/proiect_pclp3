@@ -22,3 +22,42 @@ print(f"Tipurile datelor din fiecare coloana:\n{tipuri_date}\n")
 print(f"Numarul de valori lipsa pentru fiecare coloana:\n{valori_lipsa}\n")
 print(f"Exista linii duplicate? {linii_duplicate}\n")
 
+# CERINTA 2
+
+# Procentul persoanelor care au supravietuit si care nu au supravietuit
+rata_supravietuire = data['Survived'].value_counts(normalize=True) * 100
+print(f"Procentul persoanelor care au supraviețuit: {rata_supravietuire[1]:.2f}%\n")
+print(f"Procentul persoanelor care nu au supraviețuit: {rata_supravietuire[0]:.2f}%\n")
+
+# Procentul pasagerilor pentru fiecare tip de clasa
+procent_clasa = data['Pclass'].value_counts(normalize=True) * 100
+print("Procentul pasagerilor pentru fiecare tip de clasa:\n\n")
+for clasa, procent in zip(procent_clasa.index, procent_clasa.values.round(2)):
+    print(f" Clasa {clasa}: {procent}%")
+print("\n")
+
+# Procentul barbatilor si femeilor
+procent_sex = data['Sex'].value_counts(normalize=True) * 100
+print(f"Procentul barbatilor: {procent_sex['male']:.2f}%\n")
+print(f"Procentul femeilor: {procent_sex['female']:.2f}%\n")
+
+# Grafic pentru prezentarea rezultatelor
+fig, ax = plt.subplots(1, 3, figsize=(18, 5))
+
+sns.barplot(x=rata_supravietuire.index, y=rata_supravietuire.values, ax=ax[0])
+ax[0].set_title('Procentul de supravietuire')
+ax[0].set_ylabel('Procent')
+ax[0].set_xticks([0, 1])
+ax[0].set_xticklabels(['Nu', 'Da'])
+
+sns.barplot(x=procent_clasa.index, y=procent_clasa.values, ax=ax[1])
+ax[1].set_title('Procentul pasagerilor pe clasa')
+ax[1].set_ylabel('Procent')
+
+sns.barplot(x=procent_sex.index, y=procent_sex.values, ax=ax[2])
+ax[2].set_title('Procentul pe sexe')
+ax[2].set_ylabel('Procent')
+
+plt.tight_layout()
+plt.savefig("grafic.png")
+print(f"Graficul este salvat in grafic.png\n")
