@@ -66,13 +66,28 @@ print(f"Graficul este salvat in grafic.png\n")
 
 # Generarea histogramelor pentru coloanele numerice
 coloane_numerice = data.select_dtypes(include=[np.number]).columns
-data[coloane_numerice].hist(bins=20, figsize=(14, 10), layout=(3, 3))
+data[coloane_numerice].hist(bins=30, figsize=(14, 10), layout=(3, 3))
 plt.suptitle('Histogramele pentru coloanele numerice')
 plt.tight_layout()
 plt.savefig("histograma.png")
 print(f"Histograma este salvata in histograma.png\n")
 
 # CERINTA 4
+
+# Identificarea coloanelor cu valori lipsă și procentajul lor
+valori_lipsa = data.isnull().sum()
+procent_valori_lipsa = (valori_lipsa / len(data)) * 100
+
+print(f"Numarul si proportia valorilor lipsa pentru fiecare coloana:\n{valori_lipsa[valori_lipsa > 0]}")
+print("\n")
+print(f"Procentajul valorilor lipsa:\n{procent_valori_lipsa[valori_lipsa > 0]}")
+print("\n")
+
+# Procentul valorilor lipsa pentru fiecare clasa
+for coloana in data.columns:
+    if data[coloana].isnull().sum() > 0:
+        print(f"\nColoana {coloana}:")
+        print(data.groupby('Survived')[coloana].apply(lambda x: (x.isnull().sum() / x.shape[0]) * 100))
 
 # CERINTA 5
 
