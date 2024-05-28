@@ -74,21 +74,28 @@ print(f"Histograma este salvata in histograma.png\n")
 
 # CERINTA 4
 
-# Identificarea coloanelor cu valori lipsă și procentajul lor
+# Identificarea coloanelor cu valori lipsa
 valori_lipsa = data.isnull().sum()
-procent_valori_lipsa = (valori_lipsa / len(data)) * 100
+coloane_valori_lipsa = valori_lipsa[valori_lipsa > 0]
+print("Coloanele pentru care exista valori lipsa:\n")
+for coloana, valoare in coloane_valori_lipsa.items():
+    print(f"{coloana}")
+print('\n')
 
-print(f"Numarul si proportia valorilor lipsa pentru fiecare coloana:\n{valori_lipsa[valori_lipsa > 0]}")
+# Afisarea numarului si proportiei valorilor lipsa pentru fiecare coloana
+print("Numarul si procentul valorilor lipsa pentru fiecare coloana:\n")
+for coloana, valoare in zip(coloane_valori_lipsa.index, coloane_valori_lipsa.values):
+    procent = (valoare / len(data)) * 100
+    print(f"Coloana {coloana}: {valoare} valori lipsa, in proportie de {procent:.2f}%")
 print("\n")
-print(f"Procentajul valorilor lipsa:\n{procent_valori_lipsa[valori_lipsa > 0]}")
-print("\n")
 
-# Procentul valorilor lipsa pentru fiecare clasa
-for coloana in data.columns:
-    if data[coloana].isnull().sum() > 0:
-        print(f"\nColoana {coloana}:")
-        print(data.groupby('Survived')[coloana].apply(lambda x: (x.isnull().sum() / x.shape[0]) * 100))
-
+# Procentul pentru fiecare dintre cele 2 clase (coloana Survived)
+print("Procentul valorilor lipsa pentru fiecare dintre cele doua clase:\n") 
+for coloana in coloane_valori_lipsa.index:
+    for supravietuit in [0, 1]:
+        procent = (data[coloana][data['Survived'] == supravietuit].isnull().sum() / len(data[data['Survived'] == supravietuit])) * 100
+        print(f"Clasa {supravietuit}: {procent:.2f}% pentru coloana {coloana}")
+print('\n')
 # CERINTA 5
 
 # CERINTA 6
