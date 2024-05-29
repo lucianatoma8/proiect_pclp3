@@ -59,8 +59,8 @@ ax[2].set_title('Procentul pe sexe')
 ax[2].set_ylabel('Procent')
 
 plt.tight_layout()
-plt.savefig("grafic.png")
-print(f"Graficul este salvat in grafic.png\n")
+plt.savefig("grafic1.png")
+print(f"Graficul este salvat in grafic1.png\n")
 
 # CERINTA 3
 
@@ -121,7 +121,21 @@ data['Index'] = data['Index'].map(dict(zip(range(len(categorii_varsta)), index_c
 print(data)
 
 # Crearea graficului
+fig, ax = plt.subplots(figsize=(18, 5))
 
+# Graficul pentru numărul de pasageri pentru fiecare categorie de vârstă
+ax.bar(index_categorii, nr_pasageri_per_categorie)
+ax.set_title('Numarul de pasageri pentru fiecare categorie de varsta')
+ax.set_xlabel('Indexul categoriei de varsta')
+ax.set_ylabel('Numărul de pasageri')
+ax.grid(axis='y')
+
+plt.xticks(index_categorii)
+
+# Salvarea graficului
+plt.tight_layout()
+plt.savefig("grafic2.png")
+print("\nGraficul este salvat în grafic2.png\n")
 
 # CERINTA 6
 
