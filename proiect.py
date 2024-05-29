@@ -43,18 +43,17 @@ print(f"Procentul femeilor: {procent_sex['female']:.2f}%\n")
 
 # Grafic pentru prezentarea rezultatelor
 fig, ax = plt.subplots(1, 3, figsize=(18, 5))
-
-sns.barplot(x=rata_supravietuire.index, y=rata_supravietuire.values, ax=ax[0])
+sns.barplot(x=rata_supravietuire.index, y=rata_supravietuire.values, ax=ax[0], color='pink', alpha=0.8)
 ax[0].set_title('Procentul de supravietuire')
 ax[0].set_ylabel('Procent')
 ax[0].set_xticks([0, 1])
 ax[0].set_xticklabels(['Nu', 'Da'])
 
-sns.barplot(x=procent_clasa.index, y=procent_clasa.values, ax=ax[1])
+sns.barplot(x=procent_clasa.index, y=procent_clasa.values, ax=ax[1], color='coral', alpha=0.8)
 ax[1].set_title('Procentul pasagerilor pe clasa')
 ax[1].set_ylabel('Procent')
 
-sns.barplot(x=procent_sex.index, y=procent_sex.values, ax=ax[2])
+sns.barplot(x=procent_sex.index, y=procent_sex.values, ax=ax[2], color='orange', alpha=0.8)
 ax[2].set_title('Procentul pe sexe')
 ax[2].set_ylabel('Procent')
 
@@ -66,7 +65,7 @@ print(f"Graficul este salvat in grafic1.png\n")
 
 # Generarea histogramelor pentru coloanele numerice
 coloane_numerice = data.select_dtypes(include=[np.number]).columns
-data[coloane_numerice].hist(bins=30, figsize=(14, 10), layout=(3, 3))
+data[coloane_numerice].hist(bins=30, figsize=(12, 10), layout=(3, 3), color='navy', alpha=0.75)
 plt.suptitle('Histogramele pentru coloanele numerice')
 plt.tight_layout()
 plt.savefig("histograma.png")
@@ -121,10 +120,10 @@ data['Index'] = data['Index'].map(dict(zip(range(len(categorii_varsta)), index_c
 print(data)
 
 # Crearea graficului
-fig, ax = plt.subplots(figsize=(18, 5))
+fig, ax = plt.subplots(figsize=(6, 5))
 
 # Graficul pentru numărul de pasageri pentru fiecare categorie de vârstă
-ax.bar(index_categorii, nr_pasageri_per_categorie)
+ax.bar(index_categorii, nr_pasageri_per_categorie, color='purple', alpha=0.75)
 ax.set_title('Numarul de pasageri pentru fiecare categorie de varsta')
 ax.set_xlabel('Indexul categoriei de varsta')
 ax.set_ylabel('Numărul de pasageri')
