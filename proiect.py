@@ -89,14 +89,39 @@ for coloana, valoare in zip(coloane_valori_lipsa.index, coloane_valori_lipsa.val
     print(f"Coloana {coloana}: {valoare} valori lipsa, in proportie de {procent:.2f}%")
 print("\n")
 
-# Procentul pentru fiecare dintre cele 2 clase (coloana Survived)
+# Procentul pentru fiecare dintre cele 2 clase
 print("Procentul valorilor lipsa pentru fiecare dintre cele doua clase:\n") 
 for coloana in coloane_valori_lipsa.index:
     for supravietuit in [0, 1]:
         procent = (data[coloana][data['Survived'] == supravietuit].isnull().sum() / len(data[data['Survived'] == supravietuit])) * 100
         print(f"Clasa {supravietuit}: {procent:.2f}% pentru coloana {coloana}")
 print('\n')
+
 # CERINTA 5
+
+# Categoriile de varsta [0, 20], [21, 40], [41, 60], [61, max]
+capete_intreval = [0, 20, 40, 60, data['Age'].max()]
+categorii_varsta = ['0-20', '21-40', '41-60', '61+']
+
+# Cati pasageri avem pentru fiecare categorie
+# Numărarea pasagerilor pentru fiecare categorie de vârstă
+nr_pasageri_per_categorie = pd.cut(data['Age'], bins=capete_intreval, right=False)
+nr_pasageri_per_categorie = nr_pasageri_per_categorie.value_counts().sort_index()
+nr_pasageri_per_categorie.index = categorii_varsta
+
+print("Numărul de pasageri pentru fiecare categorie de vârstă:\n")
+print(nr_pasageri_per_categorie)
+print('\n')
+
+# Introducerea unei coloane suplimentare cu indexul categoriei de varsta pentru fiecare exemplu
+data['Index'] = pd.cut(data['Age'], bins=capete_intreval, labels=False, right=False)
+index_categorii = [1, 2, 3, 4]
+data['Index'] = data['Index'].map(dict(zip(range(len(categorii_varsta)), index_categorii)))
+# Afisarea DataFrame-ului cu coloana suplimentara adaugata
+print(data)
+
+# Crearea graficului
+
 
 # CERINTA 6
 
