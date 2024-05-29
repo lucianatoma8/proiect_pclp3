@@ -172,6 +172,27 @@ print("Graficul este salvat in grafic3.png\n")
 
 # CERINTA 7
 
+# Aflarea procentului copiilor aflati la bord
+copii = data[data['Age'] < 18]
+procent_copii = (len(copii) / len(data)) * 100
+print(f"Procentul copiilor aflati la bord: {procent_copii:.2f}%\n") 
+
+adulti = data[data['Age'] >= 18]
+# procent_adulti = (len(adulti) / len(data)) * 100
+# print(f"Procentul adultilor aflati la bord: {procent_adulti:.2f}%\n") 
+
+# Graficul pentru evidentierea ratei de supravietuire pentru copii si pentru adulti
+fig, ax = plt.subplots(figsize=(6, 5))
+rata_supravietuire_copii = copii['Survived'].value_counts(normalize=True) * 100
+rata_supravietuire_adulti = adulti['Survived'].value_counts(normalize=True) * 100
+ax.bar(['Copii', 'Adulti'], [rata_supravietuire_copii[1], rata_supravietuire_adulti[1]], color='green', alpha=0.75)
+ax.set_title('Rata de supravietuire pentru copii si pentru adulti')
+ax.set_ylabel('Procent')
+ax.grid(axis='y')
+plt.tight_layout()
+plt.savefig("grafic4.png")
+print("Graficul este salvat in grafic4.png\n")
+
 # CERINTA 8
 
 # CERINTA 9
