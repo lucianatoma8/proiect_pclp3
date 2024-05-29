@@ -11,6 +11,7 @@ data = pd.read_csv('train.csv')
 numar_coloane = len(data.columns)
 tipuri_date = data.dtypes
 valori_lipsa = data.isnull().sum()
+numar_linii = data.shape[0]
 linii_duplicate = data.duplicated().any()
 if linii_duplicate == False:
     linii_duplicate = "Nu"
@@ -20,6 +21,7 @@ else:
 print(f"\nNumarul de coloane: {numar_coloane}\n")
 print(f"Tipurile datelor din fiecare coloana:\n{tipuri_date}\n")
 print(f"Numarul de valori lipsa pentru fiecare coloana:\n{valori_lipsa}\n")
+print(f"Numarul de linii: {numar_linii}\n")
 print(f"Exista linii duplicate? {linii_duplicate}\n")
 
 # CERINTA 2
@@ -30,9 +32,9 @@ print(f"Procentul persoanelor care au supraviețuit: {rata_supravietuire[1]:.2f}
 print(f"Procentul persoanelor care nu au supraviețuit: {rata_supravietuire[0]:.2f}%\n")
 
 # Procentul pasagerilor pentru fiecare tip de clasa
-procent_clasa = data['Pclass'].value_counts(normalize=True) * 100
+procent_clasa = ((data['Pclass'].value_counts(normalize=True) * 100)).round(2)
 print("Procentul pasagerilor pentru fiecare tip de clasa:\n\n")
-for clasa, procent in zip(procent_clasa.index, procent_clasa.values.round(2)):
+for clasa, procent in zip(procent_clasa.index, procent_clasa.values):
     print(f" Clasa {clasa}: {procent}%")
 print("\n")
 
@@ -104,7 +106,7 @@ categorii_varsta = ['0-20', '21-40', '41-60', '61+']
 
 # Cati pasageri avem pentru fiecare categorie
 # Numărarea pasagerilor pentru fiecare categorie de vârstă
-nr_pasageri_per_categorie = pd.cut(data['Age'], bins=capete_intreval, right=False)
+nr_pasageri_per_categorie = pd.cut(data['Age'], bins=capete_intreval, right=True)
 nr_pasageri_per_categorie = nr_pasageri_per_categorie.value_counts().sort_index()
 nr_pasageri_per_categorie.index = categorii_varsta
 
@@ -113,7 +115,7 @@ print(nr_pasageri_per_categorie)
 print('\n')
 
 # Introducerea unei coloane suplimentare cu indexul categoriei de varsta pentru fiecare exemplu
-data['Index'] = pd.cut(data['Age'], bins=capete_intreval, labels=False, right=False)
+data['Index'] = pd.cut(data['Age'], bins=capete_intreval, labels=False, right=True)
 index_categorii = [1, 2, 3, 4]
 data['Index'] = data['Index'].map(dict(zip(range(len(categorii_varsta)), index_categorii)))
 # Afisarea DataFrame-ului cu coloana suplimentara adaugata
@@ -126,7 +128,7 @@ fig, ax = plt.subplots(figsize=(6, 5))
 ax.bar(index_categorii, nr_pasageri_per_categorie, color='purple', alpha=0.75)
 ax.set_title('Numarul de pasageri pentru fiecare categorie de varsta')
 ax.set_xlabel('Indexul categoriei de varsta')
-ax.set_ylabel('Numărul de pasageri')
+ax.set_ylabel('Numarul de pasageri')
 ax.grid(axis='y')
 
 plt.xticks(index_categorii)
@@ -137,6 +139,36 @@ plt.savefig("grafic2.png")
 print("\nGraficul este salvat în grafic2.png\n")
 
 # CERINTA 6
+
+# Numarul de barbati care au supravietuit din fiecare categorie
+supravietuitori_barbati = data[(data['Sex'] == 'male') & (data['Survived'] == 1)]
+# nr_barbati_supravietuitori = len(supravietuitori_barbati)
+# print(f"Numarul de barbati care au supravietuit: {nr_barbati_supravietuitori}")
+supravietuitori_barbati_per_categorie = data[data['Sex'] == 'male'].groupby('Index')['Survived'].sum()
+print('Numarul de barbati care au supravietuit pentru fiecare dintre cele 4 categorii de varsta:\n')
+for index, numar in supravietuitori_barbati_per_categorie.items():
+    print(f"Categoria {index}: {numar} barbati")
+print('\n')
+
+# Procentul de supravietuire al barbatilor in functie de categoria de varsta
+total_barbati = data[data['Sex'] == 'male']
+total_barbati_per_categorie = total_barbati['Index'].value_counts().sort_index()
+procent_supravietuire_barbati = ((supravietuitori_barbati_per_categorie / total_barbati_per_categorie) * 100).round(2)
+# for index, procent in procent_supravietuire_barbati.items():
+#     print(f"Categoria {index}: {procent}%")
+# print('\n')
+
+# Graficul pentru influenta varstei asupra procentului de supravietuire a barbatilor
+fig, ax = plt.subplots(figsize=(6, 5))
+ax.bar(index_categorii, procent_supravietuire_barbati, color='red', alpha=0.75)
+ax.set_title('Procentul de supravietuire al barbatilor in functie de categoria de varsta')
+ax.set_xlabel('Indexul categoriei de varsta')
+ax.set_ylabel('Procentul de supravietuire')
+ax.grid(axis='y')
+plt.xticks(index_categorii)
+plt.tight_layout()
+plt.savefig("grafic3.png")
+print("Graficul este salvat in grafic3.png\n")
 
 # CERINTA 7
 
