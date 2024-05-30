@@ -5,7 +5,7 @@ import seaborn as sns
 
 # CERINTA 1
 
-# Citirea datelor din fisierul CSV
+# Citirea informatiilor
 data = pd.read_csv('train.csv')
 
 numar_coloane = len(data.columns)
@@ -17,7 +17,8 @@ if linii_duplicate == False:
     linii_duplicate = "Nu"
 else:
     linii_duplicate = "Da"
-# Examinarea structurii setului de date
+
+# Examinarea structurii informatiilor
 print(f"\nNumarul de coloane: {numar_coloane}\n")
 print(f"Tipurile datelor din fiecare coloana:\n{tipuri_date}\n")
 print(f"Numarul de valori lipsa pentru fiecare coloana:\n{valori_lipsa}\n")
@@ -28,8 +29,8 @@ print(f"Exista linii duplicate? {linii_duplicate}\n")
 
 # Procentul persoanelor care au supravietuit si care nu au supravietuit
 rata_supravietuire = data['Survived'].value_counts(normalize=True) * 100
-print(f"Procentul persoanelor care au supraviețuit: {rata_supravietuire[1]:.2f}%\n")
-print(f"Procentul persoanelor care nu au supraviețuit: {rata_supravietuire[0]:.2f}%\n")
+print(f"Procentul persoanelor care au supravietuit: {rata_supravietuire[1]:.2f}%\n")
+print(f"Procentul persoanelor care nu au supravietuit: {rata_supravietuire[0]:.2f}%\n")
 
 # Procentul pasagerilor pentru fiecare tip de clasa
 procent_clasa = ((data['Pclass'].value_counts(normalize=True) * 100)).round(2)
@@ -45,6 +46,7 @@ print(f"Procentul femeilor: {procent_sex['female']:.2f}%\n")
 
 # Grafic pentru prezentarea rezultatelor
 fig, ax = plt.subplots(1, 3, figsize=(18, 5))
+
 sns.barplot(x=rata_supravietuire.index, y=rata_supravietuire.values, ax=ax[0], color='pink', alpha=0.8)
 ax[0].set_title('Procentul de supravietuire')
 ax[0].set_ylabel('Procent')
@@ -67,7 +69,9 @@ print(f"Graficul este salvat in grafic1.png\n")
 
 # Generarea histogramelor pentru coloanele numerice
 coloane_numerice = data.select_dtypes(include=[np.number]).columns
+
 data[coloane_numerice].hist(bins=30, figsize=(12, 10), layout=(3, 3), color=['navy'], alpha=0.75)
+
 plt.suptitle('Histogramele pentru coloanele numerice')
 plt.tight_layout()
 plt.savefig("histograma.png")
@@ -83,14 +87,14 @@ for coloana, valoare in coloane_valori_lipsa.items():
     print(f"{coloana}")
 print('\n')
 
-# Afisarea numarului si proportiei valorilor lipsa pentru fiecare coloana
+# Afisarea numarului si proportiei valorilor lipsa 
 print("Numarul si procentul valorilor lipsa pentru fiecare coloana:\n")
 for coloana, valoare in zip(coloane_valori_lipsa.index, coloane_valori_lipsa.values):
     procent = (valoare / len(data)) * 100
     print(f"Coloana {coloana}: {valoare} valori lipsa, in proportie de {procent:.2f}%")
 print("\n")
 
-# Procentul pentru fiecare dintre cele 2 clase
+# Procentul pentru fiecare clasa
 print("Procentul valorilor lipsa pentru fiecare dintre cele doua clase (coloana Survived):\n") 
 for coloana in coloane_valori_lipsa.index:
     for supravietuit in [0, 1]:
@@ -105,12 +109,12 @@ capete_intreval = [0, 20, 40, 60, data['Age'].max()]
 categorii_varsta = ['0-20', '21-40', '41-60', '61+']
 
 # Cati pasageri avem pentru fiecare categorie
-# Numărarea pasagerilor pentru fiecare categorie de vârstă
+# Numararea pasagerilor
 nr_pasageri_per_categorie = pd.cut(data['Age'], bins=capete_intreval, right=True)
 nr_pasageri_per_categorie = nr_pasageri_per_categorie.value_counts().sort_index()
 nr_pasageri_per_categorie.index = categorii_varsta
 
-print("Numărul de pasageri pentru fiecare categorie de vârstă:\n")
+print("Numarul de pasageri pentru fiecare categorie de varsta:\n\n")
 print(nr_pasageri_per_categorie)
 print('\n')
 
@@ -119,15 +123,14 @@ data['Index'] = pd.cut(data['Age'], bins=capete_intreval, labels=False, right=Tr
 index_categorii = [1, 2, 3, 4]
 data['Index'] = data['Index'].map(dict(zip(range(len(categorii_varsta)), index_categorii)))
 
-# Salvarea setului de date cu coloana suplimentara adaugata
+# Salvarea informatiilor cu coloana suplimentara adaugata
 data.to_csv("train1.csv", index=False)
 
 print("Modificarile sunt vizibile in train1.csv")
 
-# Crearea graficului
+# Graficul pentru numarul de pasageri pentru fiecare categorie de varsta
 fig, ax = plt.subplots(figsize=(6, 5))
 
-# Graficul pentru numărul de pasageri pentru fiecare categorie de vârstă
 ax.bar(index_categorii, nr_pasageri_per_categorie, color='purple', alpha=0.75)
 ax.set_title('Numarul de pasageri pentru fiecare categorie de varsta')
 ax.set_xlabel('Indexul categoriei de varsta')
@@ -135,11 +138,9 @@ ax.set_ylabel('Numarul de pasageri')
 ax.grid(axis='y')
 
 plt.xticks(index_categorii)
-
-# Salvarea graficului
 plt.tight_layout()
 plt.savefig("grafic2.png")
-print("\nGraficul este salvat în grafic2.png\n")
+print("\nGraficul este salvat in grafic2.png\n")
 
 # CERINTA 6
 
@@ -162,12 +163,14 @@ procent_supravietuire_barbati = ((supravietuitori_barbati_per_categorie / total_
 # print('\n')
 
 # Graficul pentru influenta varstei asupra procentului de supravietuire a barbatilor
-fig, ax = plt.subplots(figsize=(6, 5))
+fig, ax = plt.subplots(figsize=(8, 5))
+
 ax.bar(index_categorii, procent_supravietuire_barbati, color='red', alpha=0.75)
 ax.set_title('Procentul de supravietuire al barbatilor in functie de categoria de varsta')
 ax.set_xlabel('Indexul categoriei de varsta')
 ax.set_ylabel('Procentul de supravietuire')
 ax.grid(axis='y')
+
 plt.xticks(index_categorii)
 plt.tight_layout()
 plt.savefig("grafic3.png")
@@ -186,17 +189,21 @@ adulti = data[data['Age'] >= 18]
 
 # Graficul pentru evidentierea ratei de supravietuire pentru copii si pentru adulti
 fig, ax = plt.subplots(figsize=(6, 5))
+
 rata_supravietuire_copii = copii['Survived'].value_counts(normalize=True) * 100
 rata_supravietuire_adulti = adulti['Survived'].value_counts(normalize=True) * 100
+
 # procent_copii_supravietuitori = rata_supravietuire_copii[1]
 # procent_adulti_supravietuitori = rata_supravietuire_adulti[1]
 # print(f"Procent copii supravietuitori: {procent_copii_supravietuitori.round(2)}%")
 # print(f"Procent adulti supravietuitori: {procent_adulti_supravietuitori.round(2)}%")
 # print('\n')
+
 ax.bar(['Copii', 'Adulti'], [rata_supravietuire_copii[1], rata_supravietuire_adulti[1]], color=['darkseagreen', 'darkgreen'], alpha=0.8)
 ax.set_title('Rata de supravietuire pentru copii si pentru adulti')
 ax.set_ylabel('Procent')
 ax.grid(axis='y')
+
 plt.tight_layout()
 plt.savefig("grafic4.png")
 print("Graficul este salvat in grafic4.png\n")
@@ -236,7 +243,6 @@ data_modificari['Index'] = data_modificari['Index'].fillna(0.0)
 
 # Salvarea setului de date cu modificarile adaugate
 data_modificari.to_csv("train2.csv", index=False)
-
 print("Modificarile sunt vizibile in train2.csv\n")
     
 # CERINTA 9
@@ -275,13 +281,13 @@ print('Verificarile titlurilor sunt vizibile in verificare_titluri.csv\n')
 
 # Grafic pentu cate persoane corespund fiecarui titlu
 fig, ax = plt.subplots(figsize=(10, 5))
+
 data_modificari['Title'] = data_modificari['Name'].str.extract('([A-Za-z]+)\.', expand=False)
-data_modificari['Title'].value_counts().plot(kind='bar', color='firebrick', alpha=0.75)
+data_modificari['Title'].value_counts().plot(kind='bar', color='slateblue', alpha=0.75)
 ax.set_title('Numarul de persoane pentru fiecare titlu')
 ax.set_xlabel('Titlu')
 ax.set_ylabel('Numarul de persoane')
+
 plt.tight_layout()
 plt.savefig("grafic5.png")
 print("Graficul este salvat in grafic5.png\n")
-
-# CERINTA 10
