@@ -67,7 +67,7 @@ print(f"Graficul este salvat in grafic1.png\n")
 
 # Generarea histogramelor pentru coloanele numerice
 coloane_numerice = data.select_dtypes(include=[np.number]).columns
-data[coloane_numerice].hist(bins=30, figsize=(12, 10), layout=(3, 3), color='navy', alpha=0.75)
+data[coloane_numerice].hist(bins=30, figsize=(12, 10), layout=(3, 3), color=['navy'], alpha=0.75)
 plt.suptitle('Histogramele pentru coloanele numerice')
 plt.tight_layout()
 plt.savefig("histograma.png")
@@ -91,7 +91,7 @@ for coloana, valoare in zip(coloane_valori_lipsa.index, coloane_valori_lipsa.val
 print("\n")
 
 # Procentul pentru fiecare dintre cele 2 clase
-print("Procentul valorilor lipsa pentru fiecare dintre cele doua clase:\n") 
+print("Procentul valorilor lipsa pentru fiecare dintre cele doua clase (coloana Survived):\n") 
 for coloana in coloane_valori_lipsa.index:
     for supravietuit in [0, 1]:
         procent = (data[coloana][data['Survived'] == supravietuit].isnull().sum() / len(data[data['Survived'] == supravietuit])) * 100
@@ -118,8 +118,11 @@ print('\n')
 data['Index'] = pd.cut(data['Age'], bins=capete_intreval, labels=False, right=True)
 index_categorii = [1, 2, 3, 4]
 data['Index'] = data['Index'].map(dict(zip(range(len(categorii_varsta)), index_categorii)))
-# Afisarea DataFrame-ului cu coloana suplimentara adaugata
-print(data)
+
+# Salvarea setului de date cu coloana suplimentara adaugata
+data.to_csv("train1.csv", index=False)
+
+print("Modificarile sunt vizibile in train1.csv")
 
 # Crearea graficului
 fig, ax = plt.subplots(figsize=(6, 5))
@@ -185,7 +188,12 @@ adulti = data[data['Age'] >= 18]
 fig, ax = plt.subplots(figsize=(6, 5))
 rata_supravietuire_copii = copii['Survived'].value_counts(normalize=True) * 100
 rata_supravietuire_adulti = adulti['Survived'].value_counts(normalize=True) * 100
-ax.bar(['Copii', 'Adulti'], [rata_supravietuire_copii[1], rata_supravietuire_adulti[1]], color='green', alpha=0.75)
+# procent_copii_supravietuitori = rata_supravietuire_copii[1]
+# procent_adulti_supravietuitori = rata_supravietuire_adulti[1]
+# print(f"Procent copii supravietuitori: {procent_copii_supravietuitori.round(2)}%")
+# print(f"Procent adulti supravietuitori: {procent_adulti_supravietuitori.round(2)}%")
+# print('\n')
+ax.bar(['Copii', 'Adulti'], [rata_supravietuire_copii[1], rata_supravietuire_adulti[1]], color=['darkseagreen', 'darkgreen'], alpha=0.8)
 ax.set_title('Rata de supravietuire pentru copii si pentru adulti')
 ax.set_ylabel('Procent')
 ax.grid(axis='y')
@@ -194,6 +202,43 @@ plt.savefig("grafic4.png")
 print("Graficul este salvat in grafic4.png\n")
 
 # CERINTA 8
+
+# Consider coloanele categorice: Survived, PClass, Sex, Ticket, Cabin, Embarked, adica Pclass + cele de tip objet fara Name
+# Crearea unei copii a setului de date pentru modificari
+data_modificari = data.copy()
+
+# Stim din CERINTELE 1/4 ca numai coloanele Age(float64), Cabin(object) si Embarked(object) au valori lipsa
+# Coloanele categoriale sunt Cabin si Embarked
+
+# Completarea valorilor lipsa pentru coloana 'Age' cu media pasagerilor din aceeasi clasa
+data_modificari['Age'] = data_modificari.groupby('Survived')['Age'].transform(lambda x: x.fillna(x.mean()))
+
+# Completarea valorilor lipsa pentru coloanele 'Cabin' si 'Embarked' cu cea mai frecventa valoare din aceeasi clasa
+data_modificari['Cabin'] = data_modificari['Cabin'].fillna(data_modificari['Cabin'].mode()[0])
+data_modificari['Embarked'] = data_modificari['Embarked'].fillna(data_modificari['Embarked'].mode()[0])
+
+# data_aici = pd.read_csv('train1.csv')
+# valori_lipsa_aici = data_aici.isnull().sum()
+# coloane_valori_lipsa_aici = valori_lipsa_aici[valori_lipsa_aici > 0]
+# print("Coloanele pentru care mai exista valori lipsa:\n")
+# for coloana, valoare in coloane_valori_lipsa_aici.items():
+#     print(f"{coloana}")
+# print('\n')
+# print("Numarul si procentul valorilor lipsa pentru fiecare coloana:\n")
+# for coloana, valoare in zip(coloane_valori_lipsa_aici.index, coloane_valori_lipsa_aici.values):
+#     procent = (valoare / len(data)) * 100
+#     print(f"Coloana {coloana}: {valoare} valori lipsa, in proportie de {procent:.2f}%")
+# print("\n")
+# tipuri_date_index = data_aici.dtypes
+# print(f"Tipurile datelor din coloana Index:\n{tipuri_date_index}\n")
+
+# Completarea valorilor lipsa pentru coloana Index cu 0.0
+data_modificari['Index'] = data_modificari['Index'].fillna(0.0)
+
+# Salvarea setului de date cu modificarile adaugate
+data_modificari.to_csv("train2.csv", index=False)
+
+print("Modificarile sunt vizibile in train2.csv")
 
 # CERINTA 9
 
