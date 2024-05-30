@@ -203,7 +203,6 @@ print("Graficul este salvat in grafic4.png\n")
 
 # CERINTA 8
 
-# Consider coloanele categorice: Survived, PClass, Sex, Ticket, Cabin, Embarked, adica Pclass + cele de tip objet fara Name
 # Crearea unei copii a setului de date pentru modificari
 data_modificari = data.copy()
 
@@ -241,5 +240,29 @@ data_modificari.to_csv("train2.csv", index=False)
 print("Modificarile sunt vizibile in train2.csv")
 
 # CERINTA 9
+
+# Extragem titlurile din coloana Name
+data['Title'] = data['Name'].str.extract('([A-Za-z]+)\.', expand=False)
+
+# print(data['Title'].value_counts())
+
+# Mapam titlurile si sexul
+data['Title'] = data['Title'].map({'Mr': 'male', 
+                                   'Miss': 'female', 
+                                   'Mrs': 'female', 
+                                   'Master': 'male', 
+                                   'Dr': 'male', 
+                                   'Rev': 'male',
+                                   'Mlle': 'female', 
+                                   'Major': 'male',
+                                   'Col': 'male', 
+                                   'Countess': 'female', 
+                                   'Capt': 'male',
+                                   'Ms': 'female', 
+                                   'Sir': 'male',
+                                   'Lady': 'female', 
+                                   'Mme': 'female',
+                                   'Don': 'male',
+                                   'Jonkheer', 'male'})
 
 # CERINTA 10
