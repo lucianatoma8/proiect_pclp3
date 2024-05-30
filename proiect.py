@@ -34,6 +34,7 @@ print(f"Procentul persoanelor care nu au supravietuit: {rata_supravietuire[0]:.2
 
 # Procentul pasagerilor pentru fiecare tip de clasa
 procent_clasa = ((data['Pclass'].value_counts(normalize=True) * 100)).round(2)
+procent_clasa = procent_clasa.sort_index()
 print("Procentul pasagerilor pentru fiecare tip de clasa:\n\n")
 for clasa, procent in zip(procent_clasa.index, procent_clasa.values):
     print(f" Clasa {clasa}: {procent}%")
