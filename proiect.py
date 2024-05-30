@@ -237,8 +237,8 @@ data_modificari['Index'] = data_modificari['Index'].fillna(0.0)
 # Salvarea setului de date cu modificarile adaugate
 data_modificari.to_csv("train2.csv", index=False)
 
-print("Modificarile sunt vizibile in train2.csv")
-
+print("Modificarile sunt vizibile in train2.csv\n")
+    
 # CERINTA 9
 
 # Extragem titlurile din coloana Name
@@ -247,7 +247,7 @@ data['Title'] = data['Name'].str.extract('([A-Za-z]+)\.', expand=False)
 # print(data['Title'].value_counts())
 
 # Mapam titlurile si sexul
-data['Title'] = data['Title'].map({'Mr': 'male', 
+data['Titlul_Regasit'] = data['Title'].map({'Mr': 'male', 
                                    'Miss': 'female', 
                                    'Mrs': 'female', 
                                    'Master': 'male', 
@@ -263,6 +263,25 @@ data['Title'] = data['Title'].map({'Mr': 'male',
                                    'Lady': 'female', 
                                    'Mme': 'female',
                                    'Don': 'male',
-                                   'Jonkheer', 'male'})
+                                   'Jonkheer': 'male'})
+
+# Verificam daca titlurile de noblete corespund cu sexul persoanei
+data['Titlul_Potrivit'] = data['Titlul_Regasit'] == data['Sex']
+data['Titlul_Potrivit'] = data['Titlul_Potrivit'].map({True: 'Da', False: 'Nu'})
+
+# Afisam rezultatul
+data[['Title', 'Sex', 'Titlul_Regasit', 'Titlul_Potrivit']].to_csv('verificare_titluri.csv', index=False)
+print('Verificarile titlurilor sunt vizibile in verificare_titluri.csv\n')
+
+# Grafic pentu cate persoane corespund fiecarui titlu
+fig, ax = plt.subplots(figsize=(10, 5))
+data_modificari['Title'] = data_modificari['Name'].str.extract('([A-Za-z]+)\.', expand=False)
+data_modificari['Title'].value_counts().plot(kind='bar', color='firebrick', alpha=0.75)
+ax.set_title('Numarul de persoane pentru fiecare titlu')
+ax.set_xlabel('Titlu')
+ax.set_ylabel('Numarul de persoane')
+plt.tight_layout()
+plt.savefig("grafic5.png")
+print("Graficul este salvat in grafic5.png\n")
 
 # CERINTA 10
